@@ -29,16 +29,8 @@ void Game::addFood()
     int y = (rand() % Height / 20) * 20;
     food = new GameObject(glm::vec2(x, y), glm::vec3(1.0f, 0.0f, 0.0f));
 
-    while (snake->isCollidingFood(food->Position))
-    {
-        if (snake->GetSize() == Width / 20 * Height / 20)
-        {
-            State = GAME_OVER;
-            printf("You Win\n");
-            exit(0);
-        }
+    if (snake->isCollidingFood(food->Position))
         addFood();
-    }
 }
 
 void Game::Update(const float *dt)
@@ -63,6 +55,12 @@ void Game::Update(const float *dt)
         snake->Grow();
         delete food;
         food = nullptr;
+        if (snake->GetSize() == Width / 20 * Height / 20)
+        {
+            State = GAME_OVER;
+            printf("You Win\n");
+            exit(0);
+        }
     }
     DrawObjects();
 }
@@ -77,7 +75,7 @@ void Game::ProcessInput()
         }
         else if (this->Keys[GLFW_KEY_D] && nextMove != Snake::RIGHT && snake->direction != Snake::LEFT)
         {
-            nextMove= Snake::RIGHT;
+            nextMove = Snake::RIGHT;
         }
         else if (this->Keys[GLFW_KEY_W] && nextMove != Snake::UP && snake->direction != Snake::DOWN)
         {
